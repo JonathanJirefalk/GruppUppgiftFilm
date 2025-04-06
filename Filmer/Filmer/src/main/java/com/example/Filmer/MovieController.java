@@ -9,11 +9,13 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/movies")
+@RequestMapping("/api/movies")
 public class MovieController {
 
     @Autowired
     private MovieRepository movieRepository;
+    @Autowired
+    private MovieService movieService;
 
     @GetMapping
     public ResponseEntity<List<Movie>> getAllMovies() {
@@ -26,6 +28,15 @@ public class MovieController {
         Optional<Movie> movie = movieRepository.findById(id);
         return movie.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @GetMapping("/recension/{recensionId}")
+    public ResponseEntity<List<Movie>> getMovieByRecensionId(@PathVariable Long recensionId) {
+        List<Movie> movies = movieService.findRecensionByMovieID(recensionId);
+        if(movies.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(movies, HttpStatus.OK);
     }
 
     @PostMapping
