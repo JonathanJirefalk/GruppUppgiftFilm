@@ -11,25 +11,25 @@ public class Recension {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String title; 
-    private String text;
-    private int rating; 
 
-    // Getters och Setters
+    private String text;
+    private Long userId;
+    private Integer rating; // Nytt fält för rating
+
+    public Recension() {}
+
+    public Recension(String text, Long userId, Integer rating) {
+        this.text = text;
+        this.userId = userId;
+        this.rating = rating;
+    }
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getText() {
@@ -40,12 +40,19 @@ public class Recension {
         this.text = text;
     }
 
-    public int getRating() {
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Integer getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(Integer rating) {
         this.rating = rating;
     }
 }
-
