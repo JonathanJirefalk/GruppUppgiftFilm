@@ -1,4 +1,4 @@
-package com.example.Recensioner.entity;
+package com.example.Recensioner;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,7 +18,6 @@ public class Recension {
     private Integer rating;
 
     public Recension() {
-
     }
 
     public Long getId() {

@@ -7,8 +7,12 @@ public class Review {
     private Long userId;
     private int rating;
 
-    public Review(){
+    public Review(Long id, String reviewText, Long userId, int rating) {
 
+        this.id = id;
+        this.reviewText = reviewText;
+        this.userId = userId;
+        this.rating = rating;
     }
 
     public Long getId() {

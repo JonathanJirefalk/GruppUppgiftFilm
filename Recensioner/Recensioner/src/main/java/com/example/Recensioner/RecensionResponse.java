@@ -1,7 +1,5 @@
 package com.example.Recensioner;
 
-import com.example.Recensioner.entity.Recension;
-
 public class RecensionResponse {
 
     private Recension recension;
@@ -9,6 +7,7 @@ public class RecensionResponse {
     private Movie movie;
 
     public RecensionResponse(Recension recension, User user, Movie movie) {
+
         this.recension = recension;
         this.user = user;
         this.movie = movie;

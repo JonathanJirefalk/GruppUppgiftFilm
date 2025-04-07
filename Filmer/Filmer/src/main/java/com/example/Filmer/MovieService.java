@@ -13,16 +13,13 @@ public class MovieService {
     }
 
     public Movie newMovie(Movie movie){
-
         return movieRepository.save(movie);
     }
     public List<Movie> getAllMovies() {
-
         return movieRepository.findAll();
     }
 
     public Movie getMovieById(Long id) {
-
         return movieRepository.findById(id).orElse(null);
     }
 
@@ -31,11 +28,15 @@ public class MovieService {
     }
 
     public Movie updateMovie(Long id, Movie updatedMovie){
+
         Movie targetMovie = getMovieById(id);
+
         if(targetMovie != null){
+
             targetMovie = updatedMovie;
             return newMovie(targetMovie);
         }else{
+
             throw new EntityNotFoundException("Movie not found");
         }
     }

@@ -15,10 +15,15 @@ public class MovieController {
     private final WebClient reviewClient;
 
     public MovieController(MovieService movieService, WebClient.Builder reviewClientBuilder) {
+
         this.movieService = movieService;
         this.reviewClient = reviewClientBuilder.baseUrl("http://localhost:8082").build();
     }
 
+
+
+
+    //Read______________________________________________________________________________________________________________
 
     @GetMapping
     public ResponseEntity<List<Movie>> getAllMovies() {
@@ -28,6 +33,7 @@ public class MovieController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Movie> getMovieById(@PathVariable Long id) {
+
         Movie movie = movieService.getMovieById(id);
 
         return ResponseEntity.ok(movie);
@@ -35,11 +41,17 @@ public class MovieController {
 
     @GetMapping("/{id}/reviews")
     public ResponseEntity<MovieResponse> getMovieReviews(@PathVariable Long id) {
+
         Movie movie = movieService.getMovieById(id);
         Flux<Review> reviewFlux = getReview(id);
 
         return ResponseEntity.ok(new MovieResponse(movie, reviewFlux.collectList().block()));
     }
+
+
+
+
+    //Create____________________________________________________________________________________________________________
 
     @PostMapping
     public ResponseEntity<Movie> createMovie(@RequestBody Movie movie) {
@@ -47,17 +59,32 @@ public class MovieController {
         return ResponseEntity.ok(movieService.newMovie(movie));
     }
 
+
+
+
+    //Edit______________________________________________________________________________________________________________
+
     @PutMapping("/{id}")
     public ResponseEntity<Movie> updateMovie(@PathVariable Long id, @RequestBody Movie updatedMovie) {
 
         return ResponseEntity.ok(movieService.updateMovie(id, updatedMovie));
     }
 
+
+
+
+    //Delete____________________________________________________________________________________________________________
+
     @DeleteMapping("/{id}")
     public void deleteMovie(@PathVariable Long id) {
+
         movieService.deleteMovie(id);
     }
 
+
+
+
+    //Other Functions___________________________________________________________________________________________________
 
     private Flux<Review> getReview(Long id){
 

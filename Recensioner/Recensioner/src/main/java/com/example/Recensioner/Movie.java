@@ -6,8 +6,11 @@ public class Movie {
     private String title;
     private String director;
 
-    public Movie(){
+    public Movie(Long id, String title, String director) {
 
+        this.id = id;
+        this.title = title;
+        this.director = director;
     }
 
     public Long getId() {

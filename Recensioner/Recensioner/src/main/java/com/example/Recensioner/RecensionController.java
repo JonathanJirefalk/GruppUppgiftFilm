@@ -1,24 +1,11 @@
-package com.example.Recensioner.Controller;
+package com.example.Recensioner;
 
-import java.util.List;
-import java.util.Map;
-
-import com.example.Recensioner.Movie;
-import com.example.Recensioner.RecensionResponse;
-import com.example.Recensioner.Repository.RecensionRepository;
-import com.example.Recensioner.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.history.Revision;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import com.example.Recensioner.Service.RecensionService;
-import com.example.Recensioner.entity.Recension;
-
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/recensioner")
@@ -29,10 +16,14 @@ public class RecensionController {
     private final WebClient userClient;
 
     public RecensionController(RecensionService recensionService, WebClient.Builder movieClient, WebClient.Builder userClient) {
+
         this.recensionService = recensionService;
         this.movieClient = movieClient.baseUrl("http://localhost:8081").build();
         this.userClient = userClient.baseUrl("http://localhost:8083").build();
     }
+
+
+
 
     //Read______________________________________________________________________________________________________________
 
@@ -64,6 +55,9 @@ public class RecensionController {
         return recensionService.getRecensionByMovieId(id);
     }
 
+
+
+
     //Create____________________________________________________________________________________________________________
 
     @PostMapping
@@ -71,6 +65,8 @@ public class RecensionController {
 
         return ResponseEntity.ok(recensionService.newRecension(recension));
     }
+
+
 
 
     //Edit______________________________________________________________________________________________________________
@@ -82,6 +78,8 @@ public class RecensionController {
     }
 
 
+
+
     //Delete____________________________________________________________________________________________________________
 
     @DeleteMapping("/{id}")
@@ -90,6 +88,10 @@ public class RecensionController {
         recensionService.deleteRecension(id);
     }
 
+
+
+
+    //Other Functions___________________________________________________________________________________________________
 
     private Mono<User> getUser(Long userId){
 
@@ -100,24 +102,4 @@ public class RecensionController {
 
         return movieClient.get().uri("/movie/" + movieId).retrieve().bodyToMono(Movie.class);
     }
-
-    /**
-     * Hämta en specifik recension och användarinformation kopplad till den.
-     */
-    /*@GetMapping("/{recensionId}/with-user")
-    public Mono<ResponseEntity<Map<String, Object>>> getRecensionWithUser(@PathVariable Long recensionId) {
-        return recensionService.getRecensionWithUser(recensionId)
-                .map(response -> new ResponseEntity<>(response, HttpStatus.OK))
-                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
-
-    /**
-     * Skapa en recension och verifiera användaren.
-     */
-    /*@PostMapping
-    public Mono<ResponseEntity<Recension>> skapaRecension(@RequestBody Recension recension) {
-        return recensionService.createRecension(recension, recension.getUserId())
-                .map(savedRecension -> new ResponseEntity<>(savedRecension, HttpStatus.CREATED))
-                .onErrorResume(error -> Mono.just(new ResponseEntity<>(HttpStatus.BAD_REQUEST)));
-    }*/
 }
