@@ -1,24 +1,24 @@
-package com.example.Filmer;
+package com.example.Anvandare;
 
 import java.util.List;
 
-public class MovieResponse {
+public class UserResponse {
 
-    private Movie movie;
+    private User user;
     private List<Recension> recensioner;
 
-    public MovieResponse(Movie movie, List<Recension> recensioner) {
+    public UserResponse(User user, List<Recension> recensioner) {
 
-        this.movie = movie;
+        this.user = user;
         this.recensioner = recensioner;
     }
 
-    public Movie getMovie() {
-        return movie;
+    public User getUser() {
+        return user;
     }
 
-    public void setMovie(Movie movie) {
-        this.movie = movie;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public List<Recension> getRecensioner() {
@@ -28,4 +28,5 @@ public class MovieResponse {
     public void setRecensioner(List<Recension> recensioner) {
         this.recensioner = recensioner;
     }
+
 }

@@ -1,13 +1,13 @@
-package com.example.Filmer;
+package com.example.Anvandare;
 
-public class Review {
+public class Recension {
 
     private Long id;
     private String text;
     private Long userId;
     private int rating;
 
-    public Review(Long id, String text, Long userId, int rating) {
+    public Recension(Long id, String text, Long userId, int rating) {
 
         this.id = id;
         this.text = text;

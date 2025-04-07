@@ -36,25 +36,18 @@ public class RecensionController {
     @GetMapping("/{id}")
     public ResponseEntity<Recension> getRecensionById(@PathVariable Long id){
 
-        Recension recension = recensionService.getRecensionById(id);
-
-        return ResponseEntity.ok(recension);
-
-        /*Recension recension = recensionService.getRecensionById(id);
-        Mono<User> userMono = getUser(recension.getUserId());
-        Mono<Movie> movieMono = getMovie(recension.getMovieId());
-
-        return ResponseEntity.ok(new RecensionResponse(recension, userMono.block(), movieMono.block()));*/
+        return ResponseEntity.ok(recensionService.getRecensionById(id));
     }
 
+
     @GetMapping("/{id}/user")
-    public List<Recension> getRecensionByUserId(@PathVariable Long id) {
+    public List<Recension> getRecensionsByUserId(@PathVariable Long id) {
 
         return recensionService.getRecensionByUserId(id);
     }
 
     @GetMapping("/{id}/recension")
-    public List<Recension> getRecensionByMovieId(@PathVariable Long id) {
+    public List<Recension> getRecensionsByMovieId(@PathVariable Long id) {
 
         return recensionService.getRecensionByMovieId(id);
     }
@@ -97,13 +90,13 @@ public class RecensionController {
 
     //Other Functions___________________________________________________________________________________________________
 
-    private Mono<User> getUser(Long userId){
+    private Mono<User> getUser(Long id){
 
-        return userClient.get().uri("/users/" + userId).retrieve().bodyToMono(User.class);
+        return userClient.get().uri("/users/" + id).retrieve().bodyToMono(User.class);
     }
 
-    private Mono<Movie> getMovie(Long movieId){
+    private Mono<Movie> getMovie(Long id){
 
-        return movieClient.get().uri("/movie/" + movieId).retrieve().bodyToMono(Movie.class);
+        return movieClient.get().uri("/movies/" + id).retrieve().bodyToMono(Movie.class);
     }
 }

@@ -39,13 +39,13 @@ public class MovieController {
         return ResponseEntity.ok(movie);
     }
 
-    @GetMapping("/{id}/reviews")
+    @GetMapping("/{id}/recension")
     public ResponseEntity<MovieResponse> getMovieReviews(@PathVariable Long id) {
 
         Movie movie = movieService.getMovieById(id);
-        Flux<Review> reviewFlux = getReview(id);
+        Flux<Recension> recensionFlux = getRecension(id);
 
-        return ResponseEntity.ok(new MovieResponse(movie, reviewFlux.collectList().block()));
+        return ResponseEntity.ok(new MovieResponse(movie, recensionFlux.collectList().block()));
     }
 
 
@@ -86,8 +86,8 @@ public class MovieController {
 
     //Other Functions___________________________________________________________________________________________________
 
-    private Flux<Review> getReview(Long id){
+    private Flux<Recension> getRecension(Long id){
 
-        return reviewClient.get().uri("/recensioner/" + id + "/recension").retrieve().bodyToFlux(Review.class);
+        return reviewClient.get().uri("/recensioner/" + id + "/recension").retrieve().bodyToFlux(Recension.class);
     }
 }
