@@ -34,13 +34,17 @@ public class RecensionController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RecensionResponse> getRecensionById(@PathVariable Long id){
+    public ResponseEntity<Recension> getRecensionById(@PathVariable Long id){
 
         Recension recension = recensionService.getRecensionById(id);
+
+        return ResponseEntity.ok(recension);
+
+        /*Recension recension = recensionService.getRecensionById(id);
         Mono<User> userMono = getUser(recension.getUserId());
         Mono<Movie> movieMono = getMovie(recension.getMovieId());
 
-        return ResponseEntity.ok(new RecensionResponse(recension, userMono.block(), movieMono.block()));
+        return ResponseEntity.ok(new RecensionResponse(recension, userMono.block(), movieMono.block()));*/
     }
 
     @GetMapping("/{id}/user")

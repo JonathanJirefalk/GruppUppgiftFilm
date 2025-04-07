@@ -3,14 +3,14 @@ package com.example.Filmer;
 public class Review {
 
     private Long id;
-    private String reviewText;
+    private String text;
     private Long userId;
     private int rating;
 
-    public Review(Long id, String reviewText, Long userId, int rating) {
+    public Review(Long id, String text, Long userId, int rating) {
 
         this.id = id;
-        this.reviewText = reviewText;
+        this.text = text;
         this.userId = userId;
         this.rating = rating;
     }
@@ -23,12 +23,12 @@ public class Review {
         this.id = id;
     }
 
-    public String getReviewText() {
-        return reviewText;
+    public String getText() {
+        return text;
     }
 
-    public void setReviewText(String reviewText) {
-        this.reviewText = reviewText;
+    public void setText(String text) {
+        this.text = text;
     }
 
     public Long getUserId() {
