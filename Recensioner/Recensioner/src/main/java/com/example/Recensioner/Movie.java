@@ -1,19 +1,13 @@
-package com.example.Filmer;
+package com.example.Recensioner;
 
-import jakarta.persistence.*;
-
-@Entity
-@Table(name = "movies")
 public class Movie {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String title;
     private String director;
 
     public Movie(){
+
     }
 
     public Long getId() {

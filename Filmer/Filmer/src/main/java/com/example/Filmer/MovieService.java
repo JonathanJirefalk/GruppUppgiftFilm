@@ -1,79 +1,42 @@
 package com.example.Filmer;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
-
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class MovieService {
 
-    @Autowired
-    private MovieRepository movieRepository;
+    private final MovieRepository movieRepository;
 
-    final WebClient webClient;
-    @Autowired
-    private MovieController movieController;
-
-    @Autowired
-    public MovieService(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.baseUrl("http://localhost:8082").build();
+    public MovieService(MovieRepository movieRepository) {
+        this.movieRepository = movieRepository;
     }
 
-    public List<Movie> findRecensionByMovieID(Long movieID) {
+    public Movie newMovie(Movie movie){
 
-        return movieRepository.findByMovieId(movieID);
+        return movieRepository.save(movie);
     }
-
-    public Mono<Map<String, Object>> getRecensionByMovie(Long movieId){
-        return Mono.justOrEmpty(movieRepository.findByMovieId(movieId))
-                .flatMap(movies -> webClient.get()
-                        .uri("/recension/" + movieId)
-                        .retrieve()
-                        .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
-                        .map(recension -> {
-                            Map<String, Object> response = Map.of(
-                                    "recension", recension,
-                                    "movies", movies
-                            );
-                            return response;
-                        }));
-    }
-
-
     public List<Movie> getAllMovies() {
 
         return movieRepository.findAll();
     }
 
-    public Optional<Movie> getMovieById(Long id) {
+    public Movie getMovieById(Long id) {
 
-        return movieRepository.findById(id);
+        return movieRepository.findById(id).orElse(null);
     }
 
-    public Movie createMovie(Movie movie){
-        return movieRepository.save(movie);
+    public void deleteMovie(Long id){
+        movieRepository.deleteById(id);
     }
 
-    public void deleteMovie(Movie movie){
-        movieRepository.delete(movie);
-    }
-
-    public Optional<Movie> updatedMovie(Long id, Movie updatedMovie){
-        Optional<Movie> existingMovieOptional = movieRepository.findById(id);
-        if(existingMovieOptional.isPresent()){
-            Movie existingMovie = existingMovieOptional.get();
-            existingMovie.setTitle(updatedMovie.getTitle());
-            existingMovie.setDirector(updatedMovie.getDirector());
-
-            return Optional.of(movieRepository.save(existingMovie));
+    public Movie updateMovie(Long id, Movie updatedMovie){
+        Movie targetMovie = getMovieById(id);
+        if(targetMovie != null){
+            targetMovie = updatedMovie;
+            return newMovie(targetMovie);
+        }else{
+            throw new EntityNotFoundException("Movie not found");
         }
-        return Optional.empty();
     }
 }

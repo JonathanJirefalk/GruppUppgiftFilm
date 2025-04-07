@@ -1,39 +1,63 @@
 package com.example.Recensioner.Service;
 
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
+
+import java.util.List;
 
 import com.example.Recensioner.Repository.RecensionRepository;
 import com.example.Recensioner.entity.Recension;
 
-import reactor.core.publisher.Mono;
-
 @Service
 public class RecensionService {
 
-    @Autowired
-    private RecensionRepository recensionRepository;
+    private final RecensionRepository recensionRepository;
 
-    private final WebClient webClient;
-
-    @Autowired
-    public RecensionService(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.baseUrl("http://localhost:8083").build();
+    public RecensionService(RecensionRepository recensionRepository) {
+        this.recensionRepository = recensionRepository;
     }
 
-    public List<Recension> findRecensionByUserId(Long userId) {
+    public Recension newRecension(Recension recension) {
+        return recensionRepository.save(recension);
+    }
+
+    public List<Recension> getAllRecensions() {
+        return recensionRepository.findAll();
+    }
+
+    public Recension getRecensionById(Long id) {
+        return recensionRepository.findById(id).orElse(null);
+    }
+
+    public List<Recension> getRecensionByMovieId(Long movieId) {
+        return recensionRepository.findByMovieId(movieId);
+    }
+
+    public List<Recension> getRecensionByUserId(Long userId) {
         return recensionRepository.findByUserId(userId);
+    }
+
+    public void deleteRecension(Long id){
+        recensionRepository.deleteById(id);
+    }
+
+    public Recension updateRecension(Long id, Recension updatedRecension) {
+        Recension targetRecension = getRecensionById(id);
+        if(targetRecension != null){
+
+            targetRecension = updatedRecension;
+            return newRecension(targetRecension);
+
+        }else{
+
+            throw new EntityNotFoundException("Recension not found");
+        }
     }
 
     /**
      * Hämta en specifik recension och tillhörande användarinformation.
      */
-    public Mono<Map<String, Object>> getRecensionWithUser(Long recensionId) {
+    /*public Mono<Map<String, Object>> getRecensionWithUser(Long recensionId) {
         return Mono.justOrEmpty(recensionRepository.findById(recensionId))
                 .flatMap(recension -> webClient.get()
                         .uri("/users/" + recension.getUserId()) // Hämta användardata
@@ -46,12 +70,12 @@ public class RecensionService {
                             );
                             return response;
                         }));
-    }
+    }*/
 
     /**
      * Skapa en ny recension och verifiera att användaren finns.
      */
-    public Mono<Recension> createRecension(Recension recension, Long userId) {
+    /*public Mono<Recension> createRecension(Recension recension, Long userId) {
         return webClient.get()
                 .uri("/users/" + userId)
                 .retrieve()
@@ -63,5 +87,5 @@ public class RecensionService {
                     recension.setUserId(userId);
                     return Mono.just(recensionRepository.save(recension));
                 });
-    }
+    }*/
 }

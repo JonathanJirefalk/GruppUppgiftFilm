@@ -1,83 +1,66 @@
 package com.example.Filmer;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/movies")
+@RequestMapping("/movies")
 public class MovieController {
 
-    @Autowired
-    private MovieRepository movieRepository;
-    @Autowired
-    private MovieService movieService;
+    private final MovieService movieService;
+    private final WebClient reviewClient;
+
+    public MovieController(MovieService movieService, WebClient.Builder reviewClientBuilder) {
+        this.movieService = movieService;
+        this.reviewClient = reviewClientBuilder.baseUrl("http://localhost:8082").build();
+    }
+
 
     @GetMapping
     public ResponseEntity<List<Movie>> getAllMovies() {
-        List<Movie> movies = movieRepository.findAll();
-        return new ResponseEntity<>(movies, HttpStatus.OK);
+
+        return ResponseEntity.ok(movieService.getAllMovies());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Movie> getMovieById(@PathVariable Long id) {
-        Optional<Movie> movie = movieRepository.findById(id);
-        return movie.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        Movie movie = movieService.getMovieById(id);
+
+        return ResponseEntity.ok(movie);
     }
 
-    @GetMapping("/recension/{recensionId}")
-    public ResponseEntity<List<Movie>> getMovieByRecensionId(@PathVariable Long recensionId) {
-        List<Movie> movies = movieService.findRecensionByMovieID(recensionId);
-        if(movies.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(movies, HttpStatus.OK);
+    @GetMapping("/{id}/reviews")
+    public ResponseEntity<MovieResponse> getMovieReviews(@PathVariable Long id) {
+        Movie movie = movieService.getMovieById(id);
+        Flux<Review> reviewFlux = getReview(id);
+
+        return ResponseEntity.ok(new MovieResponse(movie, reviewFlux.collectList().block()));
     }
 
     @PostMapping
     public ResponseEntity<Movie> createMovie(@RequestBody Movie movie) {
-        if(movie.getTitle() == null || movie.getTitle().trim().isEmpty()
-                || movie.getDirector() == null || movie.getDirector().trim().isEmpty()) {
 
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        Movie savedMovie = movieRepository.save(movie);
-        return new ResponseEntity<>(savedMovie, HttpStatus.CREATED);
+        return ResponseEntity.ok(movieService.newMovie(movie));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Movie> updatedMovie(@PathVariable Long id, @RequestBody Movie updatedMovie) {
-        Optional<Movie> existingMovieOptional = movieRepository.findById(id);
-        if (existingMovieOptional.isPresent()) {
+    public ResponseEntity<Movie> updateMovie(@PathVariable Long id, @RequestBody Movie updatedMovie) {
 
-            Movie existingMovie = existingMovieOptional.get();
-
-            if (updatedMovie.getTitle() != null && !updatedMovie.getTitle().trim().isEmpty()) {
-                existingMovie.setTitle(updatedMovie.getTitle());
-            }
-            if (updatedMovie.getDirector() != null && !updatedMovie.getDirector().trim().isEmpty()) {
-                existingMovie.setDirector(updatedMovie.getDirector());
-            }
-
-            Movie updated = movieRepository.save(existingMovie);
-            return new ResponseEntity<>(updated, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return ResponseEntity.ok(movieService.updateMovie(id, updatedMovie));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Movie> deleteMovie(@PathVariable Long id) {
-        if(movieRepository.existsById(id)) {
-            movieRepository.deleteById(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }else{
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public void deleteMovie(@PathVariable Long id) {
+        movieService.deleteMovie(id);
+    }
+
+
+    private Flux<Review> getReview(Long id){
+
+        return reviewClient.get().uri("/recensioner/" + id + "/recension").retrieve().bodyToFlux(Review.class);
     }
 }
