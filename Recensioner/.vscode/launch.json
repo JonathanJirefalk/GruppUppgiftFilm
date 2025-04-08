@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-RecensionerApplication<Recensioner>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.example.Recensioner.RecensionerApplication",
+            "projectName": "Recensioner",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

@@ -1,39 +1,43 @@
 package com.example.Filmer;
-
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.Optional;
 
+@Service
 public class MovieService {
 
-    private MovieRepository movieRepository;
+    private final MovieRepository movieRepository;
 
+    public MovieService(MovieRepository movieRepository) {
+        this.movieRepository = movieRepository;
+    }
+
+    public Movie newMovie(Movie movie){
+        return movieRepository.save(movie);
+    }
     public List<Movie> getAllMovies() {
-
         return movieRepository.findAll();
     }
 
-    public Optional<Movie> getMovieById(Long id) {
-
-        return movieRepository.findById(id);
+    public Movie getMovieById(Long id) {
+        return movieRepository.findById(id).orElse(null);
     }
 
-    public Movie createMovie(Movie movie){
-        return movieRepository.save(movie);
+    public void deleteMovie(Long id){
+        movieRepository.deleteById(id);
     }
 
-    public void deleteMovie(Movie movie){
-        movieRepository.delete(movie);
-    }
+    public Movie updateMovie(Long id, Movie updatedMovie){
 
-    public Optional<Movie> updatedMovie(Long id, Movie updatedMovie){
-        Optional<Movie> existingMovieOptional = movieRepository.findById(id);
-        if(existingMovieOptional.isPresent()){
-            Movie existingMovie = existingMovieOptional.get();
-            existingMovie.setTitle(updatedMovie.getTitle());
-            existingMovie.setDirector(updatedMovie.getDirector());
+        Movie targetMovie = getMovieById(id);
 
-            return Optional.of(movieRepository.save(existingMovie));
+        if(targetMovie != null){
+
+            targetMovie = updatedMovie;
+            return newMovie(targetMovie);
+        }else{
+
+            throw new EntityNotFoundException("Movie not found");
         }
-        return Optional.empty();
     }
 }

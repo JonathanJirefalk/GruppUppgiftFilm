@@ -1,4 +1,4 @@
-package com.example.Recensioner.entity;
+package com.example.Recensioner;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,11 +11,15 @@ public class Recension {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String title; 
-    private String text;
-    private int rating; 
 
-    // Getters och Setters
+    private Long movieId;
+    private String text;
+    private Long userId;
+    private Integer rating;
+
+    public Recension() {
+    }
+
     public Long getId() {
         return id;
     }
@@ -24,12 +28,12 @@ public class Recension {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public Long getMovieId() {
+        return movieId;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setMovieId(Long movieId) {
+        this.movieId = movieId;
     }
 
     public String getText() {
@@ -40,12 +44,19 @@ public class Recension {
         this.text = text;
     }
 
-    public int getRating() {
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Integer getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(Integer rating) {
         this.rating = rating;
     }
 }
-
