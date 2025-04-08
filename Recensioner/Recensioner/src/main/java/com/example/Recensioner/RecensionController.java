@@ -3,6 +3,7 @@ package com.example.Recensioner;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -50,6 +51,32 @@ public class RecensionController {
     public List<Recension> getRecensionsByMovieId(@PathVariable Long id) {
 
         return recensionService.getRecensionByMovieId(id);
+    }
+
+    /*@GetMapping("{id}/combined")
+    public Mono<ResponseEntity<Movie>> getCombinedResult(@PathVariable Long id){
+
+        Recension recension = recensionService.getRecensionById(id);
+        Mono<User> userMono = getUser(id);
+        Mono<Movie> movieMono = getMovie(id);
+
+        return movieMono.map(movie -> ResponseEntity.ok(movie));
+    }*/
+
+    @GetMapping("{id}/combined")
+    public Mono<ResponseEntity<RecensionResponse>> getCombinedRecensions(@PathVariable Long id) {
+        Recension recension = recensionService.getRecensionById(id);
+        Mono<User> userMono = getUser(recension.getUserId());
+        Mono<Movie> movieMono = getMovie(recension.getMovieId());
+
+        return Mono.zip(userMono, movieMono).
+                map(tuple -> {
+                    User user = tuple.getT1();
+                    Movie movie = tuple.getT2();
+                    RecensionResponse result = new RecensionResponse(recension, user, movie);
+
+                    return ResponseEntity.ok(result);
+                });
     }
 
 
