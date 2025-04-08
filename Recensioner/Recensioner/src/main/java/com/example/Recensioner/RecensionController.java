@@ -53,16 +53,6 @@ public class RecensionController {
         return recensionService.getRecensionByMovieId(id);
     }
 
-    /*@GetMapping("{id}/combined")
-    public Mono<ResponseEntity<Movie>> getCombinedResult(@PathVariable Long id){
-
-        Recension recension = recensionService.getRecensionById(id);
-        Mono<User> userMono = getUser(id);
-        Mono<Movie> movieMono = getMovie(id);
-
-        return movieMono.map(movie -> ResponseEntity.ok(movie));
-    }*/
-
     @GetMapping("{id}/combined")
     public Mono<ResponseEntity<RecensionResponse>> getCombinedRecensions(@PathVariable Long id) {
         Recension recension = recensionService.getRecensionById(id);
