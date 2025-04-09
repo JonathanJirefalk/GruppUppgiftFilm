@@ -9,12 +9,12 @@ public class MovieResponse {
 
     private Movie movie;
     private Statistics statistics;
-    private List<Review> recensioner;
+    private List<Review> reviews;
 
-    public MovieResponse(Movie movie, List<Review> recensioner) {
+    public MovieResponse(Movie movie, List<Review> reviews) {
 
         this.movie = movie;
-        this.recensioner = recensioner;
+        this.reviews = reviews;
     }
 
     public MovieResponse(Movie movie, Statistics statistics) {
@@ -22,10 +22,10 @@ public class MovieResponse {
         this.statistics = statistics;
     }
 
-    public MovieResponse(Movie movie, Statistics statistics, List<Review> recensioner) {
+    public MovieResponse(Movie movie, Statistics statistics, List<Review> reviews) {
         this.movie = movie;
         this.statistics = statistics;
-        this.recensioner = recensioner;
+        this.reviews = reviews;
     }
 
     public Movie getMovie() {
@@ -44,11 +44,11 @@ public class MovieResponse {
         this.statistics = statistics;
     }
 
-    public List<Review> getRecensioner() {
-        return recensioner;
+    public List<Review> getReviews() {
+        return reviews;
     }
 
-    public void setRecensioner(List<Review> recensioner) {
-        this.recensioner = recensioner;
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
     }
 }

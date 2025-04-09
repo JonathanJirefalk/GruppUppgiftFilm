@@ -5,12 +5,12 @@ import java.util.List;
 public class UserResponse {
 
     private User user;
-    private List<Review> recensioner;
+    private List<Review> reviews;
 
-    public UserResponse(User user, List<Review> recensioner) {
+    public UserResponse(User user, List<Review> reviews) {
 
         this.user = user;
-        this.recensioner = recensioner;
+        this.reviews = reviews;
     }
 
     public User getUser() {
@@ -21,12 +21,12 @@ public class UserResponse {
         this.user = user;
     }
 
-    public List<Review> getRecensioner() {
-        return recensioner;
+    public List<Review> getReviews() {
+        return reviews;
     }
 
-    public void setRecensioner(List<Review> recensioner) {
-        this.recensioner = recensioner;
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
     }
 
 }
