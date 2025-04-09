@@ -1,6 +1,7 @@
 package com.example.Filmer;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
@@ -22,6 +23,7 @@ public class MovieService {
     public Movie getMovieById(Long id) {
         return movieRepository.findById(id).orElse(null);
     }
+
 
     public void deleteMovie(Long id){
         movieRepository.deleteById(id);
